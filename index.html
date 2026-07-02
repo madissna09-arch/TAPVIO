@@ -270,25 +270,45 @@ h2{font-family:var(--font-head);font-size:clamp(1.9rem,3.6vw,2.9rem);font-weight
 .pricing-note{text-align:center;color:var(--muted);font-size:.9rem;margin-top:36px}
 .pricing-note a{color:var(--accent-2);text-decoration:none;font-weight:600}
 
-/* ---------- Produkt-Szene: echte 3D-Körper (Three.js) ---------- */
-.scene3d-wrap{position:relative;max-width:1120px;margin:0 auto;height:600px}
-#scene3d{position:absolute;inset:0;width:100%;height:100%;display:block}
-.scene3d-labels{
-  position:absolute;inset:0;pointer-events:none;
-  display:grid;grid-template-columns:repeat(4,1fr);
+/* ---------- Produkt-Galerie: schwebende Freisteller ---------- */
+.float-scene{
+  max-width:1080px;margin:0 auto;padding:44px 0 10px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:34px;align-items:end;
+  perspective:1200px;
 }
-.scene3d-labels .float-label{
-  display:flex;flex-direction:column;justify-content:flex-end;align-items:center;
-  padding-bottom:6px;
-  font-family:var(--font-head);font-weight:600;font-size:.94rem;text-align:center;line-height:1.35;
+.float-item{display:flex;flex-direction:column;align-items:center;min-width:0}
+.fi-2{transform:translateY(-28px)}
+.fi-4{transform:translateY(-40px)}
+.float-visual{
+  position:relative;width:100%;
+  animation:lift var(--lifts,7s) ease-in-out var(--liftd,0s) infinite;
 }
+.float-visual::before{
+  content:"";position:absolute;inset:6% -6% -2%;z-index:0;pointer-events:none;
+  background:radial-gradient(circle at 50% 58%,rgba(139,124,255,.3),rgba(0,212,255,.09) 52%,transparent 72%);
+  filter:blur(10px);
+  opacity:.75;transition:opacity .45s;
+}
+.float-item:hover .float-visual::before{opacity:1}
+.float-visual .tilt3{
+  position:relative;z-index:1;transform-style:preserve-3d;
+  transition:transform .35s cubic-bezier(.2,.7,.3,1);will-change:transform;
+}
+.float-visual img{
+  width:100%;display:block;pointer-events:none;
+  filter:drop-shadow(0 30px 36px rgba(0,0,0,.5));
+}
+@keyframes lift{0%,100%{transform:translateY(0)}50%{transform:translateY(-13px)}}
+.float-glow{
+  width:62%;height:20px;margin-top:20px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(139,124,255,.5),rgba(0,212,255,.12) 55%,transparent 75%);
+  filter:blur(2px);
+  animation:glow-bob var(--lifts,7s) ease-in-out var(--liftd,0s) infinite;
+}
+@keyframes glow-bob{0%,100%{transform:scaleX(1);opacity:.9}50%{transform:scaleX(.8);opacity:.5}}
+.float-label{margin-top:16px;font-family:var(--font-head);font-weight:600;font-size:.94rem;text-align:center;line-height:1.35}
 .float-label span{display:block;font-family:var(--font-body);color:var(--muted);font-size:.76rem;font-weight:500}
-.scene3d-fallback{display:none;grid-template-columns:repeat(4,1fr);gap:26px;align-items:end;max-width:1060px;margin:0 auto}
-.scene3d-fallback img{width:100%;display:block}
-.scene3d-wrap.no3d{height:auto}
-.scene3d-wrap.no3d #scene3d,.scene3d-wrap.no3d .scene3d-labels{display:none}
-.scene3d-wrap.no3d+.scene3d-fallback{display:grid}
-.drag-hint{text-align:center;color:var(--muted);font-size:.85rem;margin-top:26px;position:relative;z-index:5}
+.drag-hint{text-align:center;color:var(--muted);font-size:.85rem;margin-top:34px;position:relative;z-index:5}
 
 /* ---------- Statistiken ---------- */
 .stats-band{
@@ -414,6 +434,9 @@ footer{border-top:1px solid var(--border);margin-top:60px}
   .stats-band{grid-template-columns:1fr;gap:34px}
   .cases{grid-template-columns:repeat(2,1fr)}
   .contact-grid{grid-template-columns:1fr}
+  .float-scene{grid-template-columns:1fr 1fr;gap:52px 30px;max-width:620px}
+  .fi-2{transform:translateY(-22px)}
+  .fi-4{transform:none}
 }
 @media(max-width:640px){
   .nav-links{
@@ -437,10 +460,10 @@ footer{border-top:1px solid var(--border);margin-top:60px}
   .cases{grid-template-columns:1fr}
   .mobile-bar{display:flex}
   footer{padding-bottom:96px}
-  .scene3d-wrap{height:660px}
-  .scene3d-labels{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
-  .scene3d-labels .float-label{font-size:.86rem;padding-bottom:10px}
-  .scene3d-fallback{grid-template-columns:1fr 1fr;gap:30px 16px}
+  .float-scene{grid-template-columns:1fr 1fr;gap:40px 20px;padding-top:24px}
+  .fi-2,.fi-4{transform:none}
+  .float-glow{margin-top:12px}
+  .float-label{font-size:.86rem}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
@@ -683,24 +706,46 @@ footer{border-top:1px solid var(--border);margin-top:60px}
     <div class="sec-head reveal">
       <span class="eyebrow"><span class="dot"></span>Galerie</span>
       <h2>Unsere Produkte. <span class="grad-text">Zum Anfassen.</span></h2>
-      <p>Jedes Produkt dreht sich sanft von selbst – Vorder- und Rückseite im Blick. Die Beispiel-Designs ersetzen wir durch Ihr Logo und Ihre Farben.</p>
+      <p>Personalisiert bis ins Detail – die Beispiel-Designs ersetzen wir durch Ihr Logo, Ihre Farben und Ihr Wunschziel.</p>
     </div>
-    <div class="scene3d-wrap reveal" id="scene3d-wrap">
-      <canvas id="scene3d" aria-label="Schwebende 3D-Ansicht der TAPVIO-Produkte"></canvas>
-      <div class="scene3d-labels">
+    <div class="float-scene reveal">
+      <div class="float-item fi-1" style="--lifts:7.2s;--liftd:0s">
+        <div class="float-visual">
+          <div class="tilt3">
+            <img src="assets/cut-aufsteller-google.png" alt="NFC-Aufsteller für Google-Bewertungen" loading="lazy">
+          </div>
+        </div>
+        <span class="float-glow" aria-hidden="true"></span>
         <div class="float-label">Aufsteller<span>z. B. Google-Bewertungen</span></div>
+      </div>
+      <div class="float-item fi-2" style="--lifts:8.1s;--liftd:-2.2s">
+        <div class="float-visual">
+          <div class="tilt3">
+            <img src="assets/cut-aufsteller-instagram.png" alt="NFC-Aufsteller für Instagram-Follower" loading="lazy">
+          </div>
+        </div>
+        <span class="float-glow" aria-hidden="true"></span>
         <div class="float-label">Aufsteller<span>z. B. Instagram-Follower</span></div>
-        <div class="float-label">NFC-Karte<span>zum Mitgeben</span></div>
+      </div>
+      <div class="float-item fi-3" style="--lifts:6.7s;--liftd:-3.8s">
+        <div class="float-visual">
+          <div class="tilt3">
+            <img src="assets/cut-karte.png" alt="NFC-Karte und runder NFC-Sticker" loading="lazy">
+          </div>
+        </div>
+        <span class="float-glow" aria-hidden="true"></span>
+        <div class="float-label">NFC-Karte &amp; Sticker<span>zum Mitgeben</span></div>
+      </div>
+      <div class="float-item fi-4" style="--lifts:7.7s;--liftd:-1.4s">
+        <div class="float-visual">
+          <div class="tilt3">
+            <img src="assets/cut-sticker.png" alt="Runde und eckige NFC-Sticker" loading="lazy">
+          </div>
+        </div>
+        <span class="float-glow" aria-hidden="true"></span>
         <div class="float-label">Sticker<span>rund oder eckig, jede Größe</span></div>
       </div>
     </div>
-    <div class="scene3d-fallback" aria-hidden="true">
-      <img src="assets/cut-aufsteller-google.png" alt="">
-      <img src="assets/cut-aufsteller-instagram.png" alt="">
-      <img src="assets/cut-karte.png" alt="">
-      <img src="assets/cut-sticker.png" alt="">
-    </div>
-    <p class="drag-hint">Rückseiten unbedruckt – nur die Vorderseite trägt Ihr Design</p>
   </section>
 
   <!-- ============ STATISTIKEN ============ -->
@@ -1049,12 +1094,15 @@ const cio=new IntersectionObserver(es=>{
 },{threshold:.6});
 document.querySelectorAll('.counter').forEach(el=>cio.observe(el));
 
-/* ---------- 3D-Tilt auf Produktkarten ---------- */
-document.querySelectorAll('.tilt').forEach(card=>{
+/* ---------- 3D-Tilt auf Produktkarten und Galerie-Bildern ---------- */
+document.querySelectorAll('.tilt,.tilt3').forEach(card=>{
+  const strong=card.classList.contains('tilt3');
   card.addEventListener('mousemove',e=>{
     const r=card.getBoundingClientRect();
     const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
-    card.style.transform=`rotateY(${x*10}deg) rotateX(${-y*10}deg) translateY(-4px)`;
+    card.style.transform=strong
+      ?`rotateY(${x*14}deg) rotateX(${-y*12}deg) scale(1.045)`
+      :`rotateY(${x*10}deg) rotateX(${-y*10}deg) translateY(-4px)`;
   });
   card.addEventListener('mouseleave',()=>card.style.transform='');
 });
@@ -1115,209 +1163,5 @@ document.getElementById('wunsch-form').addEventListener('submit',async e=>{
 })();
 </script>
 
-<script type="importmap">
-{"imports":{
-  "three":"https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js",
-  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.166.1/examples/jsm/"
-}}
-</script>
-<script type="module">
-/* ---------- Produkt-Szene: echte 3D-Körper mit unbedruckter Rückseite ---------- */
-const wrap=document.getElementById('scene3d-wrap');
-const canvas=document.getElementById('scene3d');
-const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-let started=false;
-const lazyIO=new IntersectionObserver(es=>{
-  if(es.some(e=>e.isIntersecting)&&!started){started=true;lazyIO.disconnect();init().catch(err=>{console.error('3D-Szene:',err);wrap.classList.add('no3d');});}
-},{rootMargin:'500px'});
-lazyIO.observe(wrap);
-
-async function init(){
-  const THREE=await import('three');
-  const {GLTFLoader}=await import('three/addons/loaders/GLTFLoader.js');
-
-  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
-  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-  renderer.outputColorSpace=THREE.SRGBColorSpace;
-
-  const scene=new THREE.Scene();
-  const cam=new THREE.OrthographicCamera(-1,1,1,-1,.1,100);
-  cam.position.set(0,0,20);
-
-  scene.add(new THREE.HemisphereLight(0xcdd8ff,0x241c40,1.05));
-  scene.add(new THREE.AmbientLight(0xffffff,.55));
-  const key=new THREE.DirectionalLight(0xffffff,1.35);key.position.set(3,5,7);scene.add(key);
-  const fill=new THREE.DirectionalLight(0x8b7cff,.5);fill.position.set(-5,-1,-4);scene.add(fill);
-  const rim=new THREE.DirectionalLight(0x00d4ff,.45);rim.position.set(0,3,-6);scene.add(rim);
-
-  /* Rückseiten-Farbe: alles, was nach hinten zeigt, wird einfarbig übermalt */
-  function paintBack(mat,hex){
-    mat.onBeforeCompile=sh=>{
-      sh.uniforms.uBack={value:new THREE.Color(hex)};
-      sh.vertexShader=sh.vertexShader
-        .replace('#include <common>','#include <common>\nvarying vec3 vObjN;')
-        .replace('#include <beginnormal_vertex>','#include <beginnormal_vertex>\nvObjN=normalize(objectNormal);');
-      sh.fragmentShader=sh.fragmentShader
-        .replace('#include <common>','#include <common>\nvarying vec3 vObjN;\nuniform vec3 uBack;')
-        .replace('#include <map_fragment>','#include <map_fragment>\nfloat keepTex=smoothstep(-.28,-.08,vObjN.z);\ndiffuseColor.rgb=mix(uBack,diffuseColor.rgb,keepTex);');
-    };
-    mat.needsUpdate=true;
-  }
-
-  const texLoader=new THREE.TextureLoader();
-  const gltfLoader=new GLTFLoader();
-  const loadImg=src=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src;});
-  const canvasTex=c=>{const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=4;return t;};
-
-  /* GLB laden, zentrieren, auf Zielhöhe skalieren, Rückseite einfärben */
-  async function loadGLB(url,backHex,targetH){
-    const g=await gltfLoader.loadAsync(url);
-    const root=g.scene;
-    root.traverse(o=>{if(o.isMesh&&o.material){paintBack(o.material,backHex);}});
-    const box=new THREE.Box3().setFromObject(root);
-    const size=box.getSize(new THREE.Vector3()),ctr=box.getCenter(new THREE.Vector3());
-    const s=targetH/size.y;
-    root.scale.setScalar(s);
-    root.position.set(-ctr.x*s,-ctr.y*s,-ctr.z*s);
-    const grp=new THREE.Group();grp.add(root);
-    return grp;
-  }
-
-  /* NFC-Karte: dünner Körper mit runden Ecken, Druck nur vorn */
-  function makeKarte(img){
-    const w=1.14,h=1.8,r=.1,d=.035;
-    const shp=new THREE.Shape();
-    shp.moveTo(-w/2+r,-h/2);
-    shp.lineTo(w/2-r,-h/2);shp.absarc(w/2-r,-h/2+r,r,-Math.PI/2,0);
-    shp.lineTo(w/2,h/2-r);shp.absarc(w/2-r,h/2-r,r,0,Math.PI/2);
-    shp.lineTo(-w/2+r,h/2);shp.absarc(-w/2+r,h/2-r,r,Math.PI/2,Math.PI);
-    shp.lineTo(-w/2,-h/2+r);shp.absarc(-w/2+r,-h/2+r,r,Math.PI,Math.PI*1.5);
-    const geo=new THREE.ExtrudeGeometry(shp,{depth:d,bevelEnabled:true,bevelThickness:.008,bevelSize:.008,bevelSegments:2,curveSegments:10});
-    const c=document.createElement('canvas');c.width=342;c.height=540;
-    const x=c.getContext('2d');
-    x.fillStyle='#f5f7fa';x.fillRect(0,0,c.width,c.height);
-    x.drawImage(img,478,192,228,472,18,22,306,496);
-    const tex=canvasTex(c);
-    tex.wrapS=tex.wrapT=THREE.ClampToEdgeWrapping;
-    tex.repeat.set(1/(w+.02),1/(h+.02));tex.offset.set(.5,.5);
-    const front=new THREE.MeshStandardMaterial({map:tex,roughness:.42,metalness:.02});
-    paintBack(front,0xf0f2f6);
-    const side=new THREE.MeshStandardMaterial({color:0xf0f2f6,roughness:.5});
-    const mesh=new THREE.Mesh(geo,[front,side]);
-    mesh.position.z=-d/2;
-    const grp=new THREE.Group();grp.add(mesh);
-    return grp;
-  }
-
-  /* Runder Sticker: flache Scheibe, Druck nur auf der Vorderseite */
-  function makeSticker(img){
-    const R=.82,d=.05;
-    const geo=new THREE.CylinderGeometry(R,R,d,72);
-    geo.rotateX(Math.PI/2);
-    const c=document.createElement('canvas');c.width=512;c.height=512;
-    const x=c.getContext('2d');
-    x.fillStyle='#f5f7fa';x.fillRect(0,0,512,512);
-    x.drawImage(img,112,286,332,332,4,4,504,504);
-    const tex=canvasTex(c);
-    const face=new THREE.MeshStandardMaterial({map:tex,roughness:.45,metalness:.02});
-    const plain=new THREE.MeshStandardMaterial({color:0xf0f2f6,roughness:.5});
-    const mesh=new THREE.Mesh(geo,[plain,face,plain]);
-    const grp=new THREE.Group();grp.add(mesh);
-    return grp;
-  }
-
-  /* weicher Schwebe-Schein unter dem Produkt (Schatten wäre auf dunklem Grund unsichtbar) */
-  function makeShadow(){
-    const c=document.createElement('canvas');c.width=c.height=256;
-    const x=c.getContext('2d');
-    const g=x.createRadialGradient(128,128,6,128,128,124);
-    g.addColorStop(0,'rgba(139,124,255,.5)');
-    g.addColorStop(.55,'rgba(0,212,255,.14)');
-    g.addColorStop(1,'rgba(0,212,255,0)');
-    x.fillStyle=g;x.fillRect(0,0,256,256);
-    const m=new THREE.MeshBasicMaterial({map:canvasTex(c),transparent:true,depthWrite:false});
-    return new THREE.Mesh(new THREE.PlaneGeometry(2.4,.55),m);
-  }
-
-  const [imgKarte,imgSticker]=await Promise.all([
-    loadImg('assets/cut-karte.png'),loadImg('assets/cut-sticker.png')
-  ]);
-  const bodies=await Promise.all([
-    loadGLB('assets/models/aufsteller-google.glb',0xf0f2f6,2.55),
-    loadGLB('assets/models/aufsteller-instagram.glb',0xd97a9d,2.55).catch(()=>null),
-    Promise.resolve(makeKarte(imgKarte)),
-    Promise.resolve(makeSticker(imgSticker))
-  ]);
-
-  const items=bodies.map((grp,i)=>{
-    if(!grp)return null;
-    const holder=new THREE.Group();
-    holder.add(grp);
-    const sh=makeShadow();
-    scene.add(holder);scene.add(sh);
-    return {grp,holder,sh,phase:i*1.7,spin:.3+i*.028,bobW:.62+i*.07};
-  });
-
-  /* Layout: Reihe (Desktop) oder 2×2 (Mobil) */
-  let viewW=10,viewH=6;
-  function layout(){
-    const w=wrap.clientWidth,h=wrap.clientHeight;
-    renderer.setSize(w,h,false);
-    viewH=h/97;viewW=viewH*(w/h);
-    cam.left=-viewW/2;cam.right=viewW/2;cam.top=viewH/2;cam.bottom=-viewH/2;
-    cam.updateProjectionMatrix();
-    const mobile=innerWidth<641;
-    items.forEach((it,i)=>{
-      if(!it)return;
-      let px,py;
-      if(mobile){
-        px=(i%2?1:-1)*viewW*.25;
-        py=(i<2?1:-1)*viewH*.24+(i<2?.4:.28);
-      }else{
-        px=((i+0.5)/4-0.5)*viewW;
-        py=.42;
-      }
-      it.baseX=px;it.baseY=py;
-      it.floorY=py-1.62;
-      it.holder.position.set(px,py,0);
-      it.sh.position.set(px,it.floorY,0);
-      const sc=mobile?.8:1;
-      it.holder.scale.setScalar(sc);
-      it.sh.scale.setScalar(sc);
-    });
-  }
-  layout();
-  addEventListener('resize',layout);
-
-  let visible=false,rafId=0;
-  const visIO=new IntersectionObserver(es=>{
-    visible=es.some(e=>e.isIntersecting);
-    if(visible&&!rafId)rafId=requestAnimationFrame(tick);
-  },{rootMargin:'80px'});
-  visIO.observe(wrap);
-
-  function pose(t){
-    items.forEach(it=>{
-      if(!it)return;
-      const bob=Math.sin(t*it.bobW+it.phase);
-      it.holder.position.y=it.baseY+bob*.1;
-      it.holder.rotation.y=it.phase+t*it.spin;
-      it.holder.rotation.z=Math.sin(t*.4+it.phase)*.02;
-      const k=(bob+1)/2;
-      it.sh.scale.setScalar((innerWidth<641?.8:1)*(1-k*.16));
-      it.sh.material.opacity=.9-k*.4;
-    });
-  }
-  function tick(now){
-    rafId=0;
-    pose(now/1000);
-    renderer.render(scene,cam);
-    if(visible&&!reduce)rafId=requestAnimationFrame(tick);
-  }
-  if(reduce){pose(2.2);renderer.render(scene,cam);}
-  else if(visible||true){rafId=rafId||requestAnimationFrame(tick);}
-}
-</script>
 </body>
 </html>
