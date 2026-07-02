@@ -272,13 +272,14 @@ h2{font-family:var(--font-head);font-size:clamp(1.9rem,3.6vw,2.9rem);font-weight
 
 /* ---------- Produkt-Galerie: schwebende Freisteller ---------- */
 .float-scene{
-  max-width:1080px;margin:0 auto;padding:44px 0 10px;
-  display:grid;grid-template-columns:repeat(4,1fr);gap:34px;align-items:end;
+  max-width:1180px;margin:0 auto;padding:44px 0 10px;
+  display:grid;grid-template-columns:repeat(5,1fr);gap:26px;align-items:end;
   perspective:1200px;
 }
 .float-item{display:flex;flex-direction:column;align-items:center;min-width:0}
 .fi-2{transform:translateY(-28px)}
 .fi-4{transform:translateY(-40px)}
+.fi-5{transform:translateY(-14px)}
 .float-visual{
   position:relative;width:100%;
   animation:lift var(--lifts,7s) ease-in-out var(--liftd,0s) infinite;
@@ -308,6 +309,35 @@ h2{font-family:var(--font-head);font-size:clamp(1.9rem,3.6vw,2.9rem);font-weight
 @keyframes glow-bob{0%,100%{transform:scaleX(1);opacity:.9}50%{transform:scaleX(.8);opacity:.5}}
 .float-label{margin-top:16px;font-family:var(--font-head);font-weight:600;font-size:.94rem;text-align:center;line-height:1.35}
 .float-label span{display:block;font-family:var(--font-body);color:var(--muted);font-size:.76rem;font-weight:500}
+/* Platzhalter-Kachel: Ihr persönliches Design */
+.fi-5 .float-visual{aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.design-card{
+  width:80%;aspect-ratio:.64;border-radius:16px;position:relative;
+  background:linear-gradient(170deg,rgba(139,124,255,.16),rgba(0,212,255,.06));
+  border:2px dashed rgba(139,124,255,.55);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;
+  padding:18px 12px;text-align:center;
+  transform:rotate(-3deg);
+  box-shadow:0 26px 40px rgba(0,0,0,.35);
+}
+.dc-logo{
+  width:52px;height:52px;border-radius:50%;flex-shrink:0;
+  border:2px dashed rgba(0,212,255,.6);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-head);font-size:.58rem;font-weight:600;color:var(--accent-2);
+  text-transform:uppercase;letter-spacing:.06em;line-height:1.3;
+}
+.dc-title{font-family:var(--font-head);font-weight:700;font-size:.95rem;line-height:1.3;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.dc-lines{display:flex;flex-direction:column;gap:6px;width:68%}
+.dc-lines span{height:6px;border-radius:3px;background:rgba(255,255,255,.15)}
+.dc-lines span:last-child{width:68%;margin:0 auto}
+.dc-qr{width:46px;height:46px;border-radius:8px;border:2px dashed rgba(255,255,255,.32);position:relative}
+.dc-qr::before{
+  content:"";position:absolute;inset:8px;opacity:.55;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.4) 0 4px,transparent 4px 8px),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.4) 0 4px,transparent 4px 8px);
+}
 .drag-hint{text-align:center;color:var(--muted);font-size:.85rem;margin-top:34px;position:relative;z-index:5}
 
 /* ---------- Statistiken ---------- */
@@ -436,7 +466,8 @@ footer{border-top:1px solid var(--border);margin-top:60px}
   .contact-grid{grid-template-columns:1fr}
   .float-scene{grid-template-columns:1fr 1fr;gap:52px 30px;max-width:620px}
   .fi-2{transform:translateY(-22px)}
-  .fi-4{transform:none}
+  .fi-4,.fi-5{transform:none}
+  .fi-5{grid-column:1/-1;justify-self:center;width:min(56%,280px)}
 }
 @media(max-width:640px){
   .nav-links{
@@ -461,7 +492,8 @@ footer{border-top:1px solid var(--border);margin-top:60px}
   .mobile-bar{display:flex}
   footer{padding-bottom:96px}
   .float-scene{grid-template-columns:1fr 1fr;gap:40px 20px;padding-top:24px}
-  .fi-2,.fi-4{transform:none}
+  .fi-2,.fi-4,.fi-5{transform:none}
+  .fi-5{grid-column:1/-1;justify-self:center;width:min(64%,260px)}
   .float-glow{margin-top:12px}
   .float-label{font-size:.86rem}
 }
@@ -745,7 +777,22 @@ footer{border-top:1px solid var(--border);margin-top:60px}
         <span class="float-glow" aria-hidden="true"></span>
         <div class="float-label">Sticker<span>rund oder eckig, jede Größe</span></div>
       </div>
+      <div class="float-item fi-5" style="--lifts:8.4s;--liftd:-5.1s">
+        <div class="float-visual">
+          <div class="tilt3">
+            <div class="design-card">
+              <span class="dc-logo">Ihr<br>Logo</span>
+              <span class="dc-title">Ihr persönliches<br>Design hier</span>
+              <span class="dc-lines"><span></span><span></span></span>
+              <span class="dc-qr" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <span class="float-glow" aria-hidden="true"></span>
+        <div class="float-label">Ihr Design<span>Logo, Farben &amp; Wunschziel</span></div>
+      </div>
     </div>
+    <p class="drag-hint">Alle gezeigten Designs sind nur Beispiele – Ihr Produkt gestalten wir komplett individuell für Ihren Betrieb.</p>
   </section>
 
   <!-- ============ STATISTIKEN ============ -->
@@ -878,11 +925,11 @@ footer{border-top:1px solid var(--border);margin-top:60px}
           <span class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 7l10 7 10-7"/></svg></span>
           <span><span class="c-label">E-Mail</span><br><span class="c-value">tapvio.info@gmail.com</span></span>
         </a>
-        <a class="c-row" href="tel:+491017656959222">
+        <a class="c-row" href="tel:+4917656959222">
           <span class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 2 .7 2.9a2 2 0 01-.5 2.1L8 10a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.5c.9.3 1.9.6 2.9.7a2 2 0 011.7 2z"/></svg></span>
-          <span><span class="c-label">Telefon</span><br><span class="c-value">01017656959222</span></span>
+          <span><span class="c-label">Telefon</span><br><span class="c-value">0176 56959222</span></span>
         </a>
-        <a class="c-row" href="https://wa.me/491017656959222" target="_blank" rel="noopener">
+        <a class="c-row" href="https://wa.me/4917656959222" target="_blank" rel="noopener">
           <span class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 01-12.3 7.6L3 21l1.9-5.7A8.5 8.5 0 1121 11.5z"/></svg></span>
           <span><span class="c-label">WhatsApp</span><br><span class="c-value">Nachricht schreiben</span></span>
         </a>
@@ -955,7 +1002,7 @@ footer{border-top:1px solid var(--border);margin-top:60px}
 </main>
 
 <div class="mobile-bar" id="mobile-bar">
-  <a href="https://wa.me/491017656959222" target="_blank" rel="noopener" class="btn btn-ghost">WhatsApp</a>
+  <a href="https://wa.me/4917656959222" target="_blank" rel="noopener" class="btn btn-ghost">WhatsApp</a>
   <a href="#kontakt" class="btn btn-primary">Anfrage senden</a>
 </div>
 
@@ -978,7 +1025,7 @@ footer{border-top:1px solid var(--border);margin-top:60px}
     <div class="foot-col">
       <h4>Kontakt</h4>
       <a href="mailto:tapvio.info@gmail.com">tapvio.info@gmail.com</a>
-      <a href="tel:+491017656959222">01017656959222</a>
+      <a href="tel:+4917656959222">0176 56959222</a>
       <a href="#kontakt">Anfrage senden</a>
     </div>
     <div class="foot-col">
