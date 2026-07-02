@@ -270,31 +270,25 @@ h2{font-family:var(--font-head);font-size:clamp(1.9rem,3.6vw,2.9rem);font-weight
 .pricing-note{text-align:center;color:var(--muted);font-size:.9rem;margin-top:36px}
 .pricing-note a{color:var(--accent-2);text-decoration:none;font-weight:600}
 
-/* ---------- 3D-Produktgalerie ---------- */
-.carousel-wrap{
-  position:relative;height:540px;display:flex;align-items:center;justify-content:center;
-  perspective:1500px;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;
+/* ---------- Produkt-Szene: echte 3D-Körper (Three.js) ---------- */
+.scene3d-wrap{position:relative;max-width:1120px;margin:0 auto;height:600px}
+#scene3d{position:absolute;inset:0;width:100%;height:100%;display:block}
+.scene3d-labels{
+  position:absolute;inset:0;pointer-events:none;
+  display:grid;grid-template-columns:repeat(4,1fr);
 }
-.carousel-wrap:active{cursor:grabbing}
-.carousel-stage{position:relative;width:320px;height:430px;transform-style:preserve-3d;will-change:transform}
-.c-item{
-  position:absolute;inset:0;margin:0;border-radius:22px;overflow:hidden;background:#fff;
-  border:1px solid rgba(255,255,255,.45);
-  box-shadow:0 30px 70px rgba(0,0,0,.55);
-  -webkit-box-reflect:below 14px linear-gradient(transparent 62%,rgba(255,255,255,.13));
+.scene3d-labels .float-label{
+  display:flex;flex-direction:column;justify-content:flex-end;align-items:center;
+  padding-bottom:6px;
+  font-family:var(--font-head);font-weight:600;font-size:.94rem;text-align:center;line-height:1.35;
 }
-.c-item img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
-.c-item figcaption{
-  position:absolute;left:10px;right:10px;bottom:10px;padding:10px 14px;border-radius:14px;
-  background:rgba(7,8,13,.78);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  font-family:var(--font-head);font-weight:600;font-size:.95rem;color:var(--text);line-height:1.35;
-}
-.c-item figcaption span{display:block;font-family:var(--font-body);font-weight:500;font-size:.76rem;color:var(--muted)}
-.carousel-controls{display:flex;gap:14px;justify-content:center;margin-top:44px;position:relative;z-index:5}
-.c-btn{width:48px;height:48px;border-radius:50%;background:var(--surface-2);border:1px solid var(--border-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .3s,transform .3s}
-.c-btn:hover{background:rgba(255,255,255,.14);transform:translateY(-2px)}
-.c-btn svg{width:20px;height:20px;stroke:var(--text)}
-.drag-hint{text-align:center;color:var(--muted);font-size:.85rem;margin-top:14px;position:relative;z-index:5}
+.float-label span{display:block;font-family:var(--font-body);color:var(--muted);font-size:.76rem;font-weight:500}
+.scene3d-fallback{display:none;grid-template-columns:repeat(4,1fr);gap:26px;align-items:end;max-width:1060px;margin:0 auto}
+.scene3d-fallback img{width:100%;display:block}
+.scene3d-wrap.no3d{height:auto}
+.scene3d-wrap.no3d #scene3d,.scene3d-wrap.no3d .scene3d-labels{display:none}
+.scene3d-wrap.no3d+.scene3d-fallback{display:grid}
+.drag-hint{text-align:center;color:var(--muted);font-size:.85rem;margin-top:26px;position:relative;z-index:5}
 
 /* ---------- Statistiken ---------- */
 .stats-band{
@@ -443,8 +437,10 @@ footer{border-top:1px solid var(--border);margin-top:60px}
   .cases{grid-template-columns:1fr}
   .mobile-bar{display:flex}
   footer{padding-bottom:96px}
-  .carousel-wrap{height:420px;perspective:1100px}
-  .carousel-stage{width:230px;height:315px}
+  .scene3d-wrap{height:660px}
+  .scene3d-labels{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+  .scene3d-labels .float-label{font-size:.86rem;padding-bottom:10px}
+  .scene3d-fallback{grid-template-columns:1fr 1fr;gap:30px 16px}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
@@ -658,7 +654,7 @@ footer{border-top:1px solid var(--border);margin-top:60px}
       <div class="product reveal tilt">
         <div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 15a6 6 0 016-6"/><path d="M9 11a2 2 0 012 2"/></svg></div>
         <h3>Tresen-Sticker</h3>
-        <p>Quadratisch, ca. 12 × 12 cm – der Blickfang für Tresen, Theke und Eingangsbereich.</p>
+        <p>Quadratisch und markant – der Blickfang für Tresen, Theke und Eingangsbereich.</p>
         <div class="price"><span class="ab">ab</span>14,90&nbsp;€ <small>/ Stück</small></div>
       </div>
       <div class="product reveal tilt">
@@ -682,40 +678,29 @@ footer{border-top:1px solid var(--border);margin-top:60px}
     </div>
   </section>
 
-  <!-- ============ 3D-GALERIE ============ -->
+  <!-- ============ PRODUKT-SHOWCASE ============ -->
   <section id="galerie">
     <div class="sec-head reveal">
       <span class="eyebrow"><span class="dot"></span>Galerie</span>
-      <h2>Unsere Produkte. <span class="grad-text">Zum Drehen.</span></h2>
-      <p>Ziehen Sie die Galerie mit der Maus oder dem Finger – so kommen Aufsteller, Karten und Sticker bei Ihnen an. Die Beispiel-Designs ersetzen wir durch Ihr Logo und Ihre Farben.</p>
+      <h2>Unsere Produkte. <span class="grad-text">Zum Anfassen.</span></h2>
+      <p>Jedes Produkt dreht sich sanft von selbst – Vorder- und Rückseite im Blick. Die Beispiel-Designs ersetzen wir durch Ihr Logo und Ihre Farben.</p>
     </div>
-    <div class="reveal">
-      <div class="carousel-wrap" id="carousel">
-        <div class="carousel-stage" id="stage">
-          <figure class="c-item">
-            <img src="assets/produkt-aufsteller-google.jpg" alt="NFC-Aufsteller für Google-Bewertungen">
-            <figcaption>Aufsteller<span>z. B. für Google-Bewertungen</span></figcaption>
-          </figure>
-          <figure class="c-item">
-            <img src="assets/produkt-aufsteller-instagram.jpg" alt="NFC-Aufsteller für Instagram-Follower">
-            <figcaption>Aufsteller<span>z. B. für Instagram-Follower</span></figcaption>
-          </figure>
-          <figure class="c-item">
-            <img src="assets/produkt-karte.jpg" alt="NFC-Karte und runder NFC-Sticker">
-            <figcaption>NFC-Karte &amp; Sticker<span>zum Mitgeben und Aufkleben</span></figcaption>
-          </figure>
-          <figure class="c-item">
-            <img src="assets/produkt-sticker.jpg" alt="Runde und eckige NFC-Sticker">
-            <figcaption>Sticker<span>rund oder eckig, jede Größe</span></figcaption>
-          </figure>
-        </div>
+    <div class="scene3d-wrap reveal" id="scene3d-wrap">
+      <canvas id="scene3d" aria-label="Schwebende 3D-Ansicht der TAPVIO-Produkte"></canvas>
+      <div class="scene3d-labels">
+        <div class="float-label">Aufsteller<span>z. B. Google-Bewertungen</span></div>
+        <div class="float-label">Aufsteller<span>z. B. Instagram-Follower</span></div>
+        <div class="float-label">NFC-Karte<span>zum Mitgeben</span></div>
+        <div class="float-label">Sticker<span>rund oder eckig, jede Größe</span></div>
       </div>
-      <div class="carousel-controls">
-        <button class="c-btn" id="c-prev" aria-label="Nach links drehen"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
-        <button class="c-btn" id="c-next" aria-label="Nach rechts drehen"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
-      </div>
-      <p class="drag-hint">Ziehen zum Drehen – oder einfach zuschauen</p>
     </div>
+    <div class="scene3d-fallback" aria-hidden="true">
+      <img src="assets/cut-aufsteller-google.png" alt="">
+      <img src="assets/cut-aufsteller-instagram.png" alt="">
+      <img src="assets/cut-karte.png" alt="">
+      <img src="assets/cut-sticker.png" alt="">
+    </div>
+    <p class="drag-hint">Rückseiten unbedruckt – nur die Vorderseite trägt Ihr Design</p>
   </section>
 
   <!-- ============ STATISTIKEN ============ -->
@@ -767,7 +752,7 @@ footer{border-top:1px solid var(--border);margin-top:60px}
         <div class="einmalig">einmalig · keine Folgekosten</div>
         <ul>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>8 Mini-Tischsticker, personalisiert</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>1 Tresen-Sticker (12 × 12 cm)</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>1 Tresen-Sticker</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>1 Acryl-Aufsteller für die Theke</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Premium-Design nach Wunsch</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Ziel-Link jederzeit änderbar</li>
@@ -783,7 +768,7 @@ footer{border-top:1px solid var(--border);margin-top:60px}
         <div class="einmalig">einmalig · keine Folgekosten</div>
         <ul>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>15 Mini-Tischsticker, personalisiert</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>2 Tresen-Sticker (12 × 12 cm)</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>2 Tresen-Sticker</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>2 Acryl-Aufsteller</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>5 NFC-Karten zum Mitgeben</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Design-Service &amp; Express-Produktion</li>
@@ -844,9 +829,9 @@ footer{border-top:1px solid var(--border);margin-top:60px}
       <div class="contact-info reveal">
         <h3>Direkt erreichen</h3>
         <p>Ob Frage, Wunsch oder individuelles Angebot – wir sind persönlich für Sie da.</p>
-        <a class="c-row" href="mailto:madissana09@gmail.com">
+        <a class="c-row" href="mailto:tapvio.info@gmail.com">
           <span class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 7l10 7 10-7"/></svg></span>
-          <span><span class="c-label">E-Mail</span><br><span class="c-value">madissana09@gmail.com</span></span>
+          <span><span class="c-label">E-Mail</span><br><span class="c-value">tapvio.info@gmail.com</span></span>
         </a>
         <a class="c-row" href="tel:+491017656959222">
           <span class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 2 .7 2.9a2 2 0 01-.5 2.1L8 10a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.5c.9.3 1.9.6 2.9.7a2 2 0 011.7 2z"/></svg></span>
@@ -892,7 +877,7 @@ footer{border-top:1px solid var(--border);margin-top:60px}
             <option value="Business-Bundle">Business-Bundle (99 €)</option>
             <option value="Premium-Bundle">Premium-Bundle (179 €)</option>
             <option value="Mini-Tischsticker">Mini-Tischsticker</option>
-            <option value="Tresen-Sticker">Tresen-Sticker (12 × 12 cm)</option>
+            <option value="Tresen-Sticker">Tresen-Sticker</option>
             <option value="Runde Sticker">Runde Sticker</option>
             <option value="Aufsteller">Aufsteller</option>
             <option value="NFC-Karten">NFC-Karten</option>
@@ -947,7 +932,7 @@ footer{border-top:1px solid var(--border);margin-top:60px}
     </div>
     <div class="foot-col">
       <h4>Kontakt</h4>
-      <a href="mailto:madissana09@gmail.com">madissana09@gmail.com</a>
+      <a href="mailto:tapvio.info@gmail.com">tapvio.info@gmail.com</a>
       <a href="tel:+491017656959222">01017656959222</a>
       <a href="#kontakt">Anfrage senden</a>
     </div>
@@ -1094,7 +1079,7 @@ document.getElementById('wunsch-form').addEventListener('submit',async e=>{
   btn.disabled=true;btn.style.opacity=.6;
   status.className='';status.textContent='';
   try{
-    const res=await fetch('https://formsubmit.co/ajax/madissana09@gmail.com',{
+    const res=await fetch('https://formsubmit.co/ajax/tapvio.info@gmail.com',{
       method:'POST',
       headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify({
@@ -1114,56 +1099,10 @@ document.getElementById('wunsch-form').addEventListener('submit',async e=>{
     form.reset();
   }catch(err){
     status.className='err';
-    status.innerHTML='Senden fehlgeschlagen. Bitte schreiben Sie uns direkt an <a href="mailto:madissana09@gmail.com" style="color:#00d4ff">madissana09@gmail.com</a>.';
+    status.innerHTML='Senden fehlgeschlagen. Bitte schreiben Sie uns direkt an <a href="mailto:tapvio.info@gmail.com" style="color:#00d4ff">tapvio.info@gmail.com</a>.';
   }
   btn.disabled=false;btn.style.opacity=1;
 });
-
-/* ---------- 3D-Produktkarussell ---------- */
-(function(){
-  const stage=document.getElementById('stage'),wrap=document.getElementById('carousel');
-  if(!stage)return;
-  const items=[...stage.children],n=items.length;
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let radius=430,angle=0,vel=0,target=null,dragging=false,lastX=0;
-  function layout(){
-    radius=innerWidth<640?300:430;
-    items.forEach((it,i)=>it.style.transform=`rotateY(${i*360/n}deg) translateZ(${radius}px)`);
-  }
-  layout();addEventListener('resize',layout);
-  let prev=performance.now();
-  (function frame(now){
-    const dt=Math.min((now-prev)/16.7,3);prev=now;
-    if(target!==null){
-      const d=target-angle;
-      angle+=d*Math.min(.08*dt,1);
-      if(Math.abs(d)<.1){angle=target;target=null;}
-    }else if(!dragging){
-      angle+=vel*dt;vel*=Math.pow(.94,dt);
-      if(!reduce&&Math.abs(vel)<.03)angle-=.07*dt;
-      if(Math.abs(angle)>3600)angle=angle%360;
-    }
-    stage.style.transform=`rotateY(${angle}deg)`;
-    items.forEach((it,i)=>{
-      const a=((i*360/n+angle)%360+360)%360;
-      const c=Math.cos(a*Math.PI/180);
-      it.style.opacity=.4+.6*(c+1)/2;
-    });
-    requestAnimationFrame(frame);
-  })(prev);
-  wrap.addEventListener('pointerdown',e=>{
-    dragging=true;lastX=e.clientX;vel=0;target=null;
-    wrap.setPointerCapture(e.pointerId);
-  });
-  wrap.addEventListener('pointermove',e=>{
-    if(!dragging)return;
-    const dx=e.clientX-lastX;lastX=e.clientX;
-    angle+=dx*.3;vel=Math.max(-12,Math.min(12,dx*.3));
-  });
-  ['pointerup','pointercancel'].forEach(ev=>wrap.addEventListener(ev,()=>dragging=false));
-  document.getElementById('c-prev').addEventListener('click',()=>{vel=0;target=Math.round(angle/90)*90+90;});
-  document.getElementById('c-next').addEventListener('click',()=>{vel=0;target=Math.round(angle/90)*90-90;});
-})();
 
 /* ---------- Mobile Aktionsleiste ---------- */
 (function(){
@@ -1174,6 +1113,211 @@ document.getElementById('wunsch-form').addEventListener('submit',async e=>{
     .observe(document.getElementById('kontakt'));
   addEventListener('scroll',update,{passive:true});
 })();
+</script>
+
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.166.1/examples/jsm/"
+}}
+</script>
+<script type="module">
+/* ---------- Produkt-Szene: echte 3D-Körper mit unbedruckter Rückseite ---------- */
+const wrap=document.getElementById('scene3d-wrap');
+const canvas=document.getElementById('scene3d');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let started=false;
+const lazyIO=new IntersectionObserver(es=>{
+  if(es.some(e=>e.isIntersecting)&&!started){started=true;lazyIO.disconnect();init().catch(err=>{console.error('3D-Szene:',err);wrap.classList.add('no3d');});}
+},{rootMargin:'500px'});
+lazyIO.observe(wrap);
+
+async function init(){
+  const THREE=await import('three');
+  const {GLTFLoader}=await import('three/addons/loaders/GLTFLoader.js');
+
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.outputColorSpace=THREE.SRGBColorSpace;
+
+  const scene=new THREE.Scene();
+  const cam=new THREE.OrthographicCamera(-1,1,1,-1,.1,100);
+  cam.position.set(0,0,20);
+
+  scene.add(new THREE.HemisphereLight(0xcdd8ff,0x241c40,1.05));
+  scene.add(new THREE.AmbientLight(0xffffff,.55));
+  const key=new THREE.DirectionalLight(0xffffff,1.35);key.position.set(3,5,7);scene.add(key);
+  const fill=new THREE.DirectionalLight(0x8b7cff,.5);fill.position.set(-5,-1,-4);scene.add(fill);
+  const rim=new THREE.DirectionalLight(0x00d4ff,.45);rim.position.set(0,3,-6);scene.add(rim);
+
+  /* Rückseiten-Farbe: alles, was nach hinten zeigt, wird einfarbig übermalt */
+  function paintBack(mat,hex){
+    mat.onBeforeCompile=sh=>{
+      sh.uniforms.uBack={value:new THREE.Color(hex)};
+      sh.vertexShader=sh.vertexShader
+        .replace('#include <common>','#include <common>\nvarying vec3 vObjN;')
+        .replace('#include <beginnormal_vertex>','#include <beginnormal_vertex>\nvObjN=normalize(objectNormal);');
+      sh.fragmentShader=sh.fragmentShader
+        .replace('#include <common>','#include <common>\nvarying vec3 vObjN;\nuniform vec3 uBack;')
+        .replace('#include <map_fragment>','#include <map_fragment>\nfloat keepTex=smoothstep(-.28,-.08,vObjN.z);\ndiffuseColor.rgb=mix(uBack,diffuseColor.rgb,keepTex);');
+    };
+    mat.needsUpdate=true;
+  }
+
+  const texLoader=new THREE.TextureLoader();
+  const gltfLoader=new GLTFLoader();
+  const loadImg=src=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src;});
+  const canvasTex=c=>{const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=4;return t;};
+
+  /* GLB laden, zentrieren, auf Zielhöhe skalieren, Rückseite einfärben */
+  async function loadGLB(url,backHex,targetH){
+    const g=await gltfLoader.loadAsync(url);
+    const root=g.scene;
+    root.traverse(o=>{if(o.isMesh&&o.material){paintBack(o.material,backHex);}});
+    const box=new THREE.Box3().setFromObject(root);
+    const size=box.getSize(new THREE.Vector3()),ctr=box.getCenter(new THREE.Vector3());
+    const s=targetH/size.y;
+    root.scale.setScalar(s);
+    root.position.set(-ctr.x*s,-ctr.y*s,-ctr.z*s);
+    const grp=new THREE.Group();grp.add(root);
+    return grp;
+  }
+
+  /* NFC-Karte: dünner Körper mit runden Ecken, Druck nur vorn */
+  function makeKarte(img){
+    const w=1.14,h=1.8,r=.1,d=.035;
+    const shp=new THREE.Shape();
+    shp.moveTo(-w/2+r,-h/2);
+    shp.lineTo(w/2-r,-h/2);shp.absarc(w/2-r,-h/2+r,r,-Math.PI/2,0);
+    shp.lineTo(w/2,h/2-r);shp.absarc(w/2-r,h/2-r,r,0,Math.PI/2);
+    shp.lineTo(-w/2+r,h/2);shp.absarc(-w/2+r,h/2-r,r,Math.PI/2,Math.PI);
+    shp.lineTo(-w/2,-h/2+r);shp.absarc(-w/2+r,-h/2+r,r,Math.PI,Math.PI*1.5);
+    const geo=new THREE.ExtrudeGeometry(shp,{depth:d,bevelEnabled:true,bevelThickness:.008,bevelSize:.008,bevelSegments:2,curveSegments:10});
+    const c=document.createElement('canvas');c.width=342;c.height=540;
+    const x=c.getContext('2d');
+    x.fillStyle='#f5f7fa';x.fillRect(0,0,c.width,c.height);
+    x.drawImage(img,478,192,228,472,18,22,306,496);
+    const tex=canvasTex(c);
+    tex.wrapS=tex.wrapT=THREE.ClampToEdgeWrapping;
+    tex.repeat.set(1/(w+.02),1/(h+.02));tex.offset.set(.5,.5);
+    const front=new THREE.MeshStandardMaterial({map:tex,roughness:.42,metalness:.02});
+    paintBack(front,0xf0f2f6);
+    const side=new THREE.MeshStandardMaterial({color:0xf0f2f6,roughness:.5});
+    const mesh=new THREE.Mesh(geo,[front,side]);
+    mesh.position.z=-d/2;
+    const grp=new THREE.Group();grp.add(mesh);
+    return grp;
+  }
+
+  /* Runder Sticker: flache Scheibe, Druck nur auf der Vorderseite */
+  function makeSticker(img){
+    const R=.82,d=.05;
+    const geo=new THREE.CylinderGeometry(R,R,d,72);
+    geo.rotateX(Math.PI/2);
+    const c=document.createElement('canvas');c.width=512;c.height=512;
+    const x=c.getContext('2d');
+    x.fillStyle='#f5f7fa';x.fillRect(0,0,512,512);
+    x.drawImage(img,112,286,332,332,4,4,504,504);
+    const tex=canvasTex(c);
+    const face=new THREE.MeshStandardMaterial({map:tex,roughness:.45,metalness:.02});
+    const plain=new THREE.MeshStandardMaterial({color:0xf0f2f6,roughness:.5});
+    const mesh=new THREE.Mesh(geo,[plain,face,plain]);
+    const grp=new THREE.Group();grp.add(mesh);
+    return grp;
+  }
+
+  /* weicher Schwebe-Schein unter dem Produkt (Schatten wäre auf dunklem Grund unsichtbar) */
+  function makeShadow(){
+    const c=document.createElement('canvas');c.width=c.height=256;
+    const x=c.getContext('2d');
+    const g=x.createRadialGradient(128,128,6,128,128,124);
+    g.addColorStop(0,'rgba(139,124,255,.5)');
+    g.addColorStop(.55,'rgba(0,212,255,.14)');
+    g.addColorStop(1,'rgba(0,212,255,0)');
+    x.fillStyle=g;x.fillRect(0,0,256,256);
+    const m=new THREE.MeshBasicMaterial({map:canvasTex(c),transparent:true,depthWrite:false});
+    return new THREE.Mesh(new THREE.PlaneGeometry(2.4,.55),m);
+  }
+
+  const [imgKarte,imgSticker]=await Promise.all([
+    loadImg('assets/cut-karte.png'),loadImg('assets/cut-sticker.png')
+  ]);
+  const bodies=await Promise.all([
+    loadGLB('assets/models/aufsteller-google.glb',0xf0f2f6,2.55),
+    loadGLB('assets/models/aufsteller-instagram.glb',0xd97a9d,2.55).catch(()=>null),
+    Promise.resolve(makeKarte(imgKarte)),
+    Promise.resolve(makeSticker(imgSticker))
+  ]);
+
+  const items=bodies.map((grp,i)=>{
+    if(!grp)return null;
+    const holder=new THREE.Group();
+    holder.add(grp);
+    const sh=makeShadow();
+    scene.add(holder);scene.add(sh);
+    return {grp,holder,sh,phase:i*1.7,spin:.3+i*.028,bobW:.62+i*.07};
+  });
+
+  /* Layout: Reihe (Desktop) oder 2×2 (Mobil) */
+  let viewW=10,viewH=6;
+  function layout(){
+    const w=wrap.clientWidth,h=wrap.clientHeight;
+    renderer.setSize(w,h,false);
+    viewH=h/97;viewW=viewH*(w/h);
+    cam.left=-viewW/2;cam.right=viewW/2;cam.top=viewH/2;cam.bottom=-viewH/2;
+    cam.updateProjectionMatrix();
+    const mobile=innerWidth<641;
+    items.forEach((it,i)=>{
+      if(!it)return;
+      let px,py;
+      if(mobile){
+        px=(i%2?1:-1)*viewW*.25;
+        py=(i<2?1:-1)*viewH*.24+(i<2?.4:.28);
+      }else{
+        px=((i+0.5)/4-0.5)*viewW;
+        py=.42;
+      }
+      it.baseX=px;it.baseY=py;
+      it.floorY=py-1.62;
+      it.holder.position.set(px,py,0);
+      it.sh.position.set(px,it.floorY,0);
+      const sc=mobile?.8:1;
+      it.holder.scale.setScalar(sc);
+      it.sh.scale.setScalar(sc);
+    });
+  }
+  layout();
+  addEventListener('resize',layout);
+
+  let visible=false,rafId=0;
+  const visIO=new IntersectionObserver(es=>{
+    visible=es.some(e=>e.isIntersecting);
+    if(visible&&!rafId)rafId=requestAnimationFrame(tick);
+  },{rootMargin:'80px'});
+  visIO.observe(wrap);
+
+  function pose(t){
+    items.forEach(it=>{
+      if(!it)return;
+      const bob=Math.sin(t*it.bobW+it.phase);
+      it.holder.position.y=it.baseY+bob*.1;
+      it.holder.rotation.y=it.phase+t*it.spin;
+      it.holder.rotation.z=Math.sin(t*.4+it.phase)*.02;
+      const k=(bob+1)/2;
+      it.sh.scale.setScalar((innerWidth<641?.8:1)*(1-k*.16));
+      it.sh.material.opacity=.9-k*.4;
+    });
+  }
+  function tick(now){
+    rafId=0;
+    pose(now/1000);
+    renderer.render(scene,cam);
+    if(visible&&!reduce)rafId=requestAnimationFrame(tick);
+  }
+  if(reduce){pose(2.2);renderer.render(scene,cam);}
+  else if(visible||true){rafId=rafId||requestAnimationFrame(tick);}
+}
 </script>
 </body>
 </html>
